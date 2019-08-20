@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Books List
+{% endblock title %}
+
+
+{% block content %}
+
+<div class='container my-5'>
+    <table class="table">
+        <thead>
+            <tr class="table">
+                <th scope="col">No</th>
+                <th scope="col">Name</th>
+                <th scope="col">Author</th>
+                <th scope="col">Category</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Price</th>
+                <th scope="col">Status</th>
+                <th scope="col">Shelf</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in object_list %}
+            <tr>
+                <td>
+                    {{ forloop.counter }}
+                </td>
+                <td>
+                    <a href="">
+                        {{ book.name|truncatechars:'30' }}
+                    </a>
+                </td>
+                <td>
+
+                    {% for author in book.author.all %}
+                    <a href="">
+                        {{ author }}
+                    </a>
+                    {% if not forloop.last %}
+                    ,&nbsp;
+                    {% endif %}
+
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="">
+                        {{ book.category}}
+                    </a>
+                </td>
+                <td>
+                    {{ book.amount}}
+                </td>
+                <td>
+                    {{ book.price}}
+                </td>
+                <td>
+
+                    {% if book.available %}
+                    <i class="fas fa-check text-success"></i>
+                    {% else %}
+
+                    <i class="fas fa-times text-danger"></i>
+                    {% endif %}
+
+                </td>
+                <td>
+                    <a href="">
+                        {{ book.shelf}}
+                    </a>
+                </td>
+                <td>
+                    <button class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                    &nbsp;
+                    <button class="btn btn-info">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock content %}
