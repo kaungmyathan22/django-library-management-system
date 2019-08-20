@@ -7,13 +7,17 @@ Login
 
 
 {% block registration_content %}
-
-<div>
-    <div class="nav nav-pills">
-        <h2 class="nav-link active w-100 p-3">Log In</h2>
+<div class="card border-secondary mb-3">
+    <div class="card-header">
+        <h1>
+            Log In
+        </h1>
     </div>
-    <div class="px-2">
-        {% include 'registration/snippets/form.html' with form=form btn_value="Log In"%}
+    <div class="card-body">
+        <div class="px-2">
+            {% include 'registration/snippets/form.html' with form=form btn_value="Log In"%}
+        </div>
+
     </div>
 </div>
 {% endblock registration_content %}
