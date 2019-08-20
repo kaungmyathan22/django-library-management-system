@@ -14,10 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+
+admin.site.site_header = "Library Management System Admin"
+admin.site.site_title = "Library Management System Admin Portal"
+admin.site.index_title = "Welcome to Library Management System admin Portal"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('book.urls', namespace='book')),
 ]
 
 from django.conf import settings
