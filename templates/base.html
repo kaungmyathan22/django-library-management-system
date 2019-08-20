@@ -13,19 +13,19 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>
-
+        LMS | 
         {% block title %}
         {% endblock title %}
 
     </title>
 
+    <!-- Bootstrap -->
+    
+    <link rel="stylesheet" href="{% static '/bootstrap-4.0.0-dist/css/bootstrap.min.css' %}">
+    
     <!-- Font Awesome -->
 
-    <link rel="stylesheet" href="{% static '/bootstrap-4.0.0-dist/css/bootstrap.min.css' %}">
-
-    <!-- Bootstrap -->
-
-    <link rel="stylesheet" href="{% static '/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static '/font-awesome/css/all.css' %}">
 
     <!-- Custom -->
 
@@ -37,9 +37,13 @@
 
 <body>
 
+    {% include 'snippets/navbar.html' %}
+    
     {% block content %}
-
+    
     {% endblock content %}
+    
+    {% include 'snippets/footer.html' %}
 
     <script src="{% static '/jquery/jquery.min.js' %}"></script>
 
