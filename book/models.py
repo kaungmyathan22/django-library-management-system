@@ -23,9 +23,20 @@ class CreatedUpdatedMixin(models.Model):
         abstract = True
 
 class Shelf(CreatedUpdatedMixin):
-    
-    name = models.CharField(max_length=10, verbose_name="Shelf name")
-    
+    """Model definition for Shelf."""
+
+    name = models.CharField(max_length=100, verbose_name="Shelf name")
+
+    active = models.BooleanField(default=True)
+
+
+    class Meta:
+        """Meta definition for Category."""
+        ordering = ('-created_at', '-updated_at')
+        verbose_name = 'Shelf'
+        verbose_name_plural = 'Shelfs'
+
+  
     def __str__(self):
         return self.name
 
@@ -38,7 +49,7 @@ class Category(CreatedUpdatedMixin):
 
     class Meta:
         """Meta definition for Category."""
-
+        ordering = ('-created_at', '-updated_at')
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
@@ -59,7 +70,7 @@ class Book(CreatedUpdatedMixin):
 
     amount = models.PositiveIntegerField()
 
-    price = models.DecimalField(max_digits=20, decimal_places=2)
+    price = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="Unit Price")
 
     slug = models.SlugField(null=True, blank=True)
 
@@ -74,6 +85,7 @@ class Book(CreatedUpdatedMixin):
     class Meta:
         """Meta definition for Book."""
 
+        ordering = ('-created_at', '-updated_at')
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
 
@@ -82,7 +94,7 @@ class Book(CreatedUpdatedMixin):
         return self.name
 
 
-class Author(models.Model):
+class Author(CreatedUpdatedMixin):
     """Model definition for Author."""
 
     first_name = models.CharField(max_length=50)
@@ -100,6 +112,7 @@ class Author(models.Model):
     class Meta:
         """Meta definition for Author."""
 
+        ordering = ('-created_at', '-updated_at')
         verbose_name = 'Author'
         verbose_name_plural = 'Authors'
 
