@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from .models import Book, Category
 
 @receiver(post_save, sender=Book)
-def product_post_save_reciever(sender, instance, created, **kwargs):
+def object_post_save_reciever(sender, instance, created, **kwargs):
         
     if not instance.slug:
 
@@ -17,7 +17,7 @@ def product_post_save_reciever(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Book)
 @receiver(post_save, sender=Category)
-def product_post_save_reciever(sender, instance, created, **kwargs):
+def object_post_save_reciever(sender, instance, created, **kwargs):
 
     if not instance.slug:
 
