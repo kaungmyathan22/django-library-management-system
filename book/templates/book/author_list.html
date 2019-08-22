@@ -2,7 +2,7 @@
 
 
 {% block title %}
-Books List
+Authors List
 {% endblock title %}
 
 
@@ -13,65 +13,44 @@ Books List
         <thead>
             <tr class="table">
                 <th scope="col">No</th>
-                <th scope="col">Name</th>
-                <th scope="col">Author</th>
-                <th scope="col">Category</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Price</th>
-                <th scope="col">Status</th>
-                <th scope="col">Shelf</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Born</th>
+                <th scope="col">Died</th>
+                <th scope="col">Written Books</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for book in object_list %}
+            {% for author in object_list %}
             <tr>
                 <td>
                     {{ forloop.counter }}
                 </td>
                 <td>
                     <a href="">
-                        {{ book.name|truncatechars:'30' }}
+                        {{ author.first_name}}
                     </a>
                 </td>
                 <td>
-
-                    {% for author in book.author.all %}
-                    <a href="">
-                        {{ author }}
-                    </a>
-                    {% if not forloop.last %}
-                    ,&nbsp;
-                    {% endif %}
-
-                    {% endfor %}
+                    {{ author.last_name}}
                 </td>
                 <td>
-                    <a href="">
-                        {{ book.category}}
-                    </a>
+                    {{ author.born }}
                 </td>
                 <td>
-                    {{ book.amount}}
-                </td>
-                <td>
-                    {{ book.price}}
-                </td>
-                <td>
-
-                    {% if book.available %}
-                    <i class="fas fa-check text-success"></i>
+                    
+                    {% if not author.died %}
+                        -
                     {% else %}
-
-                    <i class="fas fa-times text-danger"></i>
+                    {{ author.died }}
                     {% endif %}
-
+                        
                 </td>
                 <td>
-                    <a href="">
-                        {{ book.shelf}}
-                    </a>
+                    {{ author.books.count }}
                 </td>
+
                 <td>
                     <button class="btn btn-danger">
                         <i class="fas fa-trash-alt"></i>

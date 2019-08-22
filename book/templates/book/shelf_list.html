@@ -2,7 +2,7 @@
 
 
 {% block title %}
-Books List
+Shelfs List
 {% endblock title %}
 
 
@@ -14,63 +14,42 @@ Books List
             <tr class="table">
                 <th scope="col">No</th>
                 <th scope="col">Name</th>
-                <th scope="col">Author</th>
-                <th scope="col">Category</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Price</th>
+                <th scope="col">Books</th>
+                <th scope="col">Created</th>
+                <th scope="col">Updated</th>
                 <th scope="col">Status</th>
-                <th scope="col">Shelf</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for book in object_list %}
+            {% for shelf in object_list %}
             <tr>
                 <td>
                     {{ forloop.counter }}
                 </td>
                 <td>
                     <a href="">
-                        {{ book.name|truncatechars:'30' }}
+                        {{ shelf.name|truncatechars:'30' }}
                     </a>
                 </td>
                 <td>
-
-                    {% for author in book.author.all %}
-                    <a href="">
-                        {{ author }}
-                    </a>
-                    {% if not forloop.last %}
-                    ,&nbsp;
-                    {% endif %}
-
-                    {% endfor %}
+                    {{ shelf.books.count }}
                 </td>
                 <td>
-                    <a href="">
-                        {{ book.category}}
-                    </a>
+                    {{ shelf.created_at }}
                 </td>
                 <td>
-                    {{ book.amount}}
-                </td>
-                <td>
-                    {{ book.price}}
+                    {{ shelf.updated_at }}
                 </td>
                 <td>
 
-                    {% if book.available %}
+                    {% if shelf.active %}
                     <i class="fas fa-check text-success"></i>
                     {% else %}
 
                     <i class="fas fa-times text-danger"></i>
                     {% endif %}
 
-                </td>
-                <td>
-                    <a href="">
-                        {{ book.shelf}}
-                    </a>
                 </td>
                 <td>
                     <button class="btn btn-danger">
