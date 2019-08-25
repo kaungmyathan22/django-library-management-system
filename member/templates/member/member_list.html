@@ -1,0 +1,67 @@
+{% extends 'book/book_base.html' %}
+
+
+{% block title %}
+Member List
+{% endblock title %}
+
+
+{% block book_content %}
+
+<div class='container my-5'>
+
+    <table class="table">
+        <thead>
+            <tr class="table">
+                <th scope="col">No</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Born</th>
+                <th scope="col">Roll No</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in object_list %}
+            <tr>
+                <td>
+                    {{ forloop.counter }}
+                </td>
+                <td>
+                    <a href="">
+                        {{ member.first_name}}
+                    </a>
+                </td>
+                <td>
+                    {{ member.last_name}}
+                </td>
+                <td>
+                    <a href="">
+                        {{ member.email}}
+                    </a>
+                </td>
+                <td>
+                    {{ member.born }}
+                </td>
+
+                <td>
+                    {{ member.roll_no }}
+                </td>
+
+                <td>
+                    <button class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                    &nbsp;
+                    <button class="btn btn-info">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock book_content %}
