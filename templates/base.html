@@ -27,33 +27,41 @@
 
     <link rel="stylesheet" href="{% static '/font-awesome/css/all.css' %}">
 
+    <!-- Date time picker -->
+    
+    <link rel="stylesheet" href="{% static '/datetimepicker/jquery.datetimepicker.min.css' %}">
+    
     <!-- Custom -->
-
+    <link rel="stylesheet" href="{% static '/custom/style.css' %}">
+    
     {% block css %}
-
+    
     {% endblock css %}
-
+    
 </head>
 
 <body>
-
-    {% include 'snippets/navbar.html' %}
     
     {% block content %}
     
     {% endblock content %}
     
-    {% include 'snippets/footer.html' %}
-
     <script src="{% static '/jquery/jquery.min.js' %}"></script>
-
+    
     <script src="{% static '/bootstrap-4.0.0-dist/js/bootstrap.min.js' %}"></script>
-
+    
+    <script rel="stylesheet" src="{% static '/datetimepicker/jquery.datetimepicker.full.js' %}"> </script>
+    
+    <script rel="stylesheet" src="{% static '/datetimepicker/jquery.datetimepicker.full.min.js' %}"> </script>
+    
+    <script rel="stylesheet" src="{% static '/datetimepicker/jquery.datetimepicker.min.js' %}"> </script>
+    
+    <script src="{% static '/custom/index.js' %}"></script>
 
     {% block javascript %}
-
+    
     {% endblock javascript %}
-
+    
 </body>
 
 </html>
