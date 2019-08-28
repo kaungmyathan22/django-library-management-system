@@ -1,12 +1,13 @@
 from django.db import models
 from django.utils.timezone import datetime
 
+
 def image_upload_path(instance, filename):
 
     _, extension = filename.split('.')
-    
+
     current_time = str(datetime.now())
-    
+
     filename = f'{current_time}.{extension}'
 
     return filename
@@ -22,6 +23,7 @@ class CreatedUpdatedMixin(models.Model):
 
         abstract = True
 
+
 class Shelf(CreatedUpdatedMixin):
     """Model definition for Shelf."""
 
@@ -29,16 +31,15 @@ class Shelf(CreatedUpdatedMixin):
 
     active = models.BooleanField(default=True)
 
-
     class Meta:
         """Meta definition for Category."""
         ordering = ('-created_at', '-updated_at')
         verbose_name = 'Shelf'
         verbose_name_plural = 'Shelfs'
 
-  
     def __str__(self):
         return self.name
+
 
 class Category(CreatedUpdatedMixin):
     """Model definition for Category."""
@@ -70,17 +71,20 @@ class Book(CreatedUpdatedMixin):
 
     amount = models.PositiveIntegerField()
 
-    price = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="Unit Price")
+    price = models.DecimalField(
+        max_digits=20, decimal_places=2, verbose_name="Unit Price")
 
     slug = models.SlugField(null=True, blank=True)
 
     available = models.BooleanField(default=True)
-    
+
     description = models.TextField()
 
-    image = models.ImageField(upload_to=image_upload_path, null=True, blank=True)
-    
-    shelf = models.ForeignKey(to="Shelf", on_delete=models.SET_NULL, null=True, related_name='books')
+    image = models.ImageField(
+        upload_to=image_upload_path, null=True, blank=True)
+
+    shelf = models.ForeignKey(
+        to="Shelf", on_delete=models.SET_NULL, null=True, related_name='books')
 
     class Meta:
         """Meta definition for Book."""
@@ -107,7 +111,8 @@ class Author(CreatedUpdatedMixin):
 
     died = models.DateTimeField(null=True, blank=True)
 
-    image = models.ImageField(upload_to=image_upload_path)
+    image = models.ImageField(
+        upload_to=image_upload_path, null=True, blank=True)
 
     class Meta:
         """Meta definition for Author."""
