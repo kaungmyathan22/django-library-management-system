@@ -5,8 +5,8 @@
 Login
 {% endblock title %}
 
-
 {% block registration_content %}
+
 <div class="card border-secondary mb-3">
     <div class="card-header">
         <h1>
@@ -15,6 +15,11 @@ Login
     </div>
     <div class="card-body">
         <div class="px-2">
+            
+            {% if form.errors %}
+                form contain errors
+            {% endif %}
+                
             {% include 'registration/snippets/form.html' with form=form btn_value="Log In"%}
         </div>
 
