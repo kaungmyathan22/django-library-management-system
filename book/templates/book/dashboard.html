@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'book/book_base.html' %}
 
 
 {% block title %}
@@ -6,7 +6,7 @@ Dashboard
 {% endblock title %}
 
 
-{% block content %}
+{% block book_content %}
 <div class="container my-3">
     <div class="row">
         <div class="col-md-4">
@@ -17,7 +17,9 @@ Dashboard
                 </div>
                 <div class="card-body mt-4">
                     <div class="text-center h1">
-                        <strong>93</strong>
+                        <strong>
+                            {{ book_count }}
+                        </strong>
                     </div>
                 </div>
             </div>
@@ -69,7 +71,9 @@ Dashboard
                 </div>
                 <div class="card-body mt-4">
                     <div class="text-center h1">
-                        <strong>93</strong>
+                        <strong>
+                            {{ author_count }}
+                        </strong>
                     </div>
                 </div>
             </div>
@@ -82,11 +86,13 @@ Dashboard
                 </div>
                 <div class="card-body mt-4">
                     <div class="text-center h1">
-                        <strong>93</strong>
+                        <strong>
+                            {{ category_count }}
+                        </strong>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock book_content %}

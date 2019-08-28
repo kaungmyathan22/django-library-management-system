@@ -8,7 +8,7 @@ Authors List
 
 {% block book_content %}
 
-<div class='container my-5'>
+<div class='container my-5' id="js-author-list-body">
     <table class="table">
         <thead>
             <tr class="table">
@@ -23,7 +23,7 @@ Authors List
         </thead>
         <tbody>
             {% for author in object_list %}
-            <tr>
+            <tr data-id={{ author.pk }}>
                 <td>
                     {{ forloop.counter }}
                 </td>
@@ -39,31 +39,123 @@ Authors List
                     {{ author.born }}
                 </td>
                 <td>
-                    
+
                     {% if not author.died %}
-                        -
+                    -
                     {% else %}
                     {{ author.died }}
                     {% endif %}
-                        
+
                 </td>
                 <td>
                     {{ author.books.count }}
                 </td>
 
                 <td>
-                    <button class="btn btn-danger">
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal" id='js-delete-{{author.pk}}' data-id={{ author.pk }} data-action="{% url 'book:author-delete' pk=author.pk%}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                     &nbsp;
-                    <button class="btn btn-info">
-                        <i class="fas fa-pencil-alt"></i>
-                    </button>
+                    <a class="text-white" href="{% url 'book:author-update' pk=author.pk %}">
+                        <button class="btn btn-info">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-
+<div class="modal" id="deleteConfirmModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm author delete operation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-danger">&times;</span>
+                </button>
+            </div>
+            <form id='js-ajax-delete-form' method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    Are you sure you want to delete this author ?
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock book_content %}
+{% block javascript %}
+<script>
+
+    let delete_buttons = $('button').filter('[id^=js-delete]');
+
+    let trs = $('tbody').children('tr');
+
+    delete_buttons.click(function () {
+
+        let pk = $(this).data('id');
+
+        let row_to_delete = trs.filter(`[data-id^=${pk}]`)
+
+        let url = $(this).data('action');
+
+        let cleanded_cols = $(row_to_delete).children('td').slice(0, row_to_delete.length - 3);
+
+        let book_name_col = $(cleanded_cols[1]).children('a');
+
+        let form = $('#js-ajax-delete-form');
+
+        console.log(form)
+
+        console.log(url)
+
+        console.log(row_to_delete)
+
+        $(form).on('submit', function (event) {
+            event.preventDefault();
+            console.log("Deleteing data")
+            console.log(row_to_delete)
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: $(this).serialize(),
+                success: (data) => {
+                    let message = `<div class="alert alert-dismissible alert-success">
+                        <div>
+                                        <strong>Success ! </strong> ${data.message}.
+                        <span id="js-updated-message">
+
+                                        </span>
+                                    </div>
+                                    <button type="button" class="close mt-1" data-dismiss="alert">
+                                        <small aria-hidden="true" class="text-danger">
+                                            &times;
+                        </small>
+                                    </button>
+                    </div>`;
+
+                    row_to_delete.detach();
+
+                    $('#js-author-list-body').prepend(message)
+
+                    $("#deleteConfirmModal").modal('hide');
+
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    console.log(jqXHR)
+                    console.log(textStatus)
+                    console.log(errorThrown)
+                }
+            });
+
+        });
+
+    });
+</script>
+{% endblock javascript %}

@@ -1,5 +1,6 @@
 {% extends 'book/book_base.html' %}
 
+{% load crispy_forms_tags %}
 
 {% block title %}
 Shelfs List
@@ -7,8 +8,8 @@ Shelfs List
 
 
 {% block book_content %}
+<div class='container my-5' id="js-shelf-list-body">
 
-<div class='container my-5'>
     <table class="table">
         <thead>
             <tr class="table">
@@ -23,7 +24,7 @@ Shelfs List
         </thead>
         <tbody>
             {% for shelf in object_list %}
-            <tr>
+            <tr data-id={{ shelf.pk }}>
                 <td>
                     {{ forloop.counter }}
                 </td>
@@ -52,11 +53,11 @@ Shelfs List
 
                 </td>
                 <td>
-                    <button class="btn btn-danger">
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal" id='js-delete-{{shelf.pk}}' data-id={{ shelf.pk }} data-action="{% url 'book:shelf-delete' pk=shelf.pk%}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                     &nbsp;
-                    <button class="btn btn-info">
+                    <button class="btn btn-info" data-toggle="modal" data-target="#myModal" id='js-update-{{shelf.pk}}' data-id={{ shelf.pk }} data-action="{% url 'book:shelf-update' pk=shelf.pk%}">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
                 </td>
@@ -65,5 +66,187 @@ Shelfs List
         </tbody>
     </table>
 </div>
+<div class="modal" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Shelf Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-danger">&times;</span>
+                </button>
+            </div>
+            <form id='js-ajax-update-form' method="POST">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ shelf_update_form|crispy }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
+<div class="modal" id="deleteConfirmModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm shelf delete operation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-danger">&times;</span>
+                </button>
+            </div>
+            <form id='js-ajax-delete-form' method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    Are you sure you want to delete this shelf ?
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock book_content %}
+
+
+{% block javascript %}
+{% if shelf_jquery_update %}
+<script>
+
+    let update_buttons = $('button').filter('[id^=js-update]');
+
+    let delete_buttons = $('button').filter('[id^=js-delete]');
+
+    let trs = $('tbody').children('tr');
+
+    delete_buttons.click(function () {
+
+        let pk = $(this).data('id');
+
+        let row_to_delete = trs.filter(`[data-id^=${pk}]`)
+
+        let url = $(this).data('action');
+
+        let cleanded_cols = $(row_to_delete).children('td').slice(0, row_to_delete.length - 3);
+
+        let shelf_name_col = $(cleanded_cols[1]).children('a');
+
+        let form = $('#js-ajax-delete-form');
+
+        console.log(form)
+
+        console.log(url)
+
+        
+        $(form).on('submit', function (event) {
+            event.preventDefault();
+            console.log("Deleteing data")
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: $(this).serialize(),
+                success: (data) => {
+                    let message = `<div class="alert alert-dismissible alert-success">
+                        <div>
+                                        <strong>Success</strong> ${data.message}.
+                        <span id="js-updated-message">
+
+                                        </span>
+                                    </div>
+                                    <button type="button" class="close mt-1" data-dismiss="alert">
+                                        <small aria-hidden="true" class="text-danger">
+                                            &times;
+                        </small>
+                                    </button>
+                    </div>`;
+
+                    row_to_delete.detach();
+
+                    $('#js-shelf-list-body').prepend(message)
+
+                    $("#deleteConfirmModal").modal('hide');
+
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    console.log(jqXHR)
+                    console.log(textStatus)
+                    console.log(errorThrown)
+                }
+            });
+        });
+
+    });
+
+
+    update_buttons.click(function () {
+
+        let pk = $(this).data('id');
+
+        let row_to_update = trs.filter(`[data-id^=${pk}]`)
+
+        let url = $(this).data('action')
+
+        let cleanded_cols = $(row_to_update).children('td').slice(0, row_to_update.length - 3);
+
+        let shelf_name_col = $(cleanded_cols[1]).children('a');
+
+        let shelf_updated_time_col = $(cleanded_cols[4]);
+
+        let shelf_name = shelf_name_col.html().trim();
+
+        let form = $('#js-ajax-update-form');
+
+        $('#id_name').val(shelf_name);
+
+        console.log(url)
+
+        $(form).on('submit', function (event) {
+            event.preventDefault();
+            console.log("Submitting data");
+            console.log($(this).serialize())
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: $(this).serialize(),
+                success: (data) => {
+                    let updated_name = data.name;
+                    let updated_date = data.updated;
+                    shelf_name_col.html(updated_name)
+                    shelf_updated_time_col.html(updated_date)
+                    let message = `<div class="alert alert-dismissible alert-success">
+                        <div>
+                                        <strong>Success</strong> ! You successfully updated ${shelf_name} to ${updated_name}.
+                        <span id="js-updated-message">
+
+                                        </span>
+                                    </div>
+                                    <button type="button" class="close mt-1" data-dismiss="alert">
+                                        <small aria-hidden="true" class="text-danger">
+                                            &times;
+                        </small>
+                                    </button>
+                    </div>`;
+
+                    $('#js-shelf-list-body').prepend(message)
+
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    console.log(jqXHR)
+                    console.log(textStatus)
+                    console.log(errorThrown)
+                }
+            });
+            $("#myModal").modal('hide');
+        });
+
+    });
+
+</script>
+{% endif %}
+
+{% endblock javascript %}
