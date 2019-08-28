@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-lg-8 offset-md-2">
             <div class="card border-secondary mb-3">
-                <div class="card-header h1">{{ header }}</div>
+                <div class="card-header h2">{{ header }}</div>
                 <div class="card-body">
                     <form {% if action_url %} action="{{ action_url }}" {% endif %} method="POST" {% if file_upload %} enctype="multipart/form-data" {% endif %}>
                         {% csrf_token %}
