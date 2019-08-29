@@ -1,4 +1,4 @@
-{% extends 'book/book_base.html' %}
+{% extends 'base.html' %}
 
 {% load crispy_forms_tags %}
 
@@ -7,7 +7,7 @@ Shelfs List
 {% endblock title %}
 
 
-{% block book_content %}
+{% block content %}
 <div class='container my-5' id="js-shelf-list-body">
 
     <table class="table">
@@ -111,7 +111,7 @@ Shelfs List
         </div>
     </div>
 </div>
-{% endblock book_content %}
+{% endblock content %}
 
 
 {% block javascript %}
