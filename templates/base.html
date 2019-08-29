@@ -41,11 +41,15 @@
 </head>
 
 <body>
+
+    {% include 'snippets/navbar.html' %}
     
     {% block content %}
     
     {% endblock content %}
     
+    {% include 'snippets/footer.html' %}
+
     <script src="{% static '/jquery/jquery.min.js' %}"></script>
     
     <script src="{% static '/bootstrap-4.0.0-dist/js/bootstrap.min.js' %}"></script>
