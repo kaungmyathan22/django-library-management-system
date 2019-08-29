@@ -130,7 +130,7 @@ def category_update_view(request, pk):
 
     instance = get_object_or_404(Category, pk=pk)
 
-    form = ShelfUpdateForm(request.POST or None, instance=instance)
+    form = CategoryUpdateForm(request.POST or None, instance=instance)
 
     if request.method == "POST":
 
