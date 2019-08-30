@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+Issued Book List
+{% endblock title %}
+
+
+{% block content %}
+
+<div class='container my-5' id="js-issued-book-list-body">
+
+    <table class="table">
+        <thead>
+            <tr class="table">
+                <th scope="col">No</th>
+                <th scope="col">Member</th>
+                <th scope="col">Issued Book</th>
+                <th scope="col">Issued Date</th>
+                <th scope="col">Return Date</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for issued_book in object_list %}
+            <tr data-id={{ issued_book.pk }}>
+                <td>
+                    {{ issued_book.pk }}
+                </td>
+                <td>
+                    {{ issued_book.member}}
+                </td>
+                <td>
+                    {{ issued_book.book}}
+                </td>
+                <td>
+                    {{ issued_book.date }}
+                </td>
+                <td>
+                    {{ issued_book.return_date }}
+                </td>
+                <td>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal" id='js-delete-{{issued_book.pk}}' data-id={{ issued_book.pk }} data-action="{% url 'issue:issue-delete' pk=issued_book.pk %}" data-toggle="tooltip" title="Delete book">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                    &nbsp;
+                    
+                    <button class="btn btn-info mr-2" data-toggle="modal" data-target="#myModal" id="js-update" data-id={{ issued_book.pk }} data-action="{% url 'issue:issue-update' pk=issued_book.pk %}" data-placement="bottom" data-toggle="tooltip" title="Edit book" data-original-title="Edit book">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" id='js-return-issue-book' data-id='{{ issued_book.pk }}' title="Recieve Return book" data-action="{% url 'issue:issue-return' pk=issued_book.pk %}" data-original-title="Recieve Return book">
+                        <i class="fas fa-share"></i>
+                    </button>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if is_paginated %}
+        {% include 'snippets/pagination.html' with page_obj=page_obj %}
+    {% endif %}
+</div>
+<div class="modal" id="deleteConfirmModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm issued_book delete operation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-danger">&times;</span>
+                </button>
+            </div>
+            <form id='js-ajax-delete-form' method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    Are you sure you want to delete this issued_book ?
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Issue Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-danger">&times;</span>
+                </button>
+            </div>
+            <form id='js-ajax-update-form' method="POST">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ update_form|crispy }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block javascript %}
+<script>
+
+    $('#id_date').datetimepicker({
+            format: 'Y-m-d H:i',
+        });
+
+    let update_buttons = $('button').filter('[id^=js-update]');
+
+    let delete_buttons = $('button').filter('[id^=js-delete]');
+    
+    let return_book_buttons = $('button').filter('[id^=js-return-issue-book]');
+
+    let trs = $('tbody').children('tr');
+
+    return_book_buttons.click(function(){
+        
+        let pk = $(this).data('id');
+
+        let row_to_update = trs.filter(`[data-id^=${pk}]`)
+
+        let url = $(this).data('action')
+
+        let return_date_col = $($(row_to_update).children()[4])
+
+        $.ajax({
+                method: "GET",
+                url: url,
+                data: {},
+                success: (data) => {
+                    let message = `<div class="alert alert-dismissible alert-success">
+                        <div>
+                                        <strong>Success</strong> . Successfully returned a book.
+                        <span id="js-updated-message">
+
+                                        </span>
+                                    </div>
+                                    <button type="button" class="close mt-1" data-dismiss="alert">
+                                        <small aria-hidden="true" class="text-danger">
+                                            &times;
+                        </small>
+                                    </button>
+                    </div>`;
+
+                    console.log(data.date)
+
+                    console.log(return_date_col)
+
+                    return_date_col.html(data.date)
+
+                    $('#js-issued-book-list-body').prepend(message)
+
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    console.log(jqXHR)
+                    console.log(textStatus)
+                    console.log(errorThrown)
+                }
+            });
+    });
+
+    delete_buttons.click(function () {
+
+        let pk = $(this).data('id');
+
+        let row_to_delete = trs.filter(`[data-id^=${pk}]`)
+
+        let url = $(this).data('action');
+
+        let form = $('#js-ajax-delete-form');
+
+
+        $(form).on('submit', function (event) {
+            event.preventDefault();
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: $(this).serialize(),
+                success: (data) => {
+                    let message = `<div class="alert alert-dismissible alert-success">
+                        <div>
+                                        <strong>Success</strong> ${data.message}.
+                        <span id="js-updated-message">
+
+                                        </span>
+                                    </div>
+                                    <button type="button" class="close mt-1" data-dismiss="alert">
+                                        <small aria-hidden="true" class="text-danger">
+                                            &times;
+                        </small>
+                                    </button>
+                    </div>`;
+
+                    row_to_delete.detach();
+
+                    $('#js-issued-book-list-body').prepend(message)
+
+                    $("#deleteConfirmModal").modal('hide');
+
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    console.log(jqXHR)
+                    console.log(textStatus)
+                    console.log(errorThrown)
+                }
+            });
+        });
+
+    });
+
+
+    update_buttons.click(function () {
+
+        let pk = $(this).data('id');
+
+        let row_to_update = trs.filter(`[data-id^=${pk}]`)
+
+        let url = $(this).data('action')
+
+        let cleanded_cols = $(row_to_update).children('td').slice(0, row_to_update.length - 3);
+
+        let form = $('#js-ajax-update-form');
+
+        let member_name_col = $(cleanded_cols[1]);
+
+        let book_name_col = $(cleanded_cols[2]);
+        
+        let issued_date_col = $(cleanded_cols[3]);
+
+        $(form).on('submit', function (event) {
+            event.preventDefault();
+            console.log("Submitting data");
+            console.log($(this).serialize())
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: $(this).serialize(),
+                success: (data) => {
+                    let book_name = data.book;
+                    let member_name = data.member;
+                    let issued_date = data.date;
+                    
+                    member_name_col.html(member_name);
+                    book_name_col.html(book_name);
+                    issued_date_col.html(issued_date);
+
+                    let message = `<div class="alert alert-dismissible alert-success">
+                        <div>
+                                        <strong>Success</strong> ! You successfully updated issued book info.
+                        <span id="js-updated-message">
+
+                                        </span>
+                                    </div>
+                                    <button type="button" class="close mt-1" data-dismiss="alert">
+                                        <small aria-hidden="true" class="text-danger">
+                                            &times;
+                        </small>
+                                    </button>
+                    </div>`;
+
+                    $('#js-issued-book-list-body').prepend(message)
+
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    console.log(jqXHR)
+                    console.log(textStatus)
+                    console.log(errorThrown)
+                }
+            });
+            
+            $("#myModal").modal('hide');
+        });
+
+    });
+
+</script>
+
+{% endblock javascript %}

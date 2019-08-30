@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ header }}
+{% endblock title %}
+
+
+{% block content %}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 offset-md-2">
+            <div class="card border-secondary mb-3">
+                <div class="card-header h2">{{ header }}</div>
+                <div class="card-body">
+                    <form {% if action_url %} action="{{ action_url }}" {% endif %} method="POST" {% if file_upload %} enctype="multipart/form-data" {% endif %}>
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="row mt-5">
+                            <button type="submit" class="btn btn-primary mx-4 col-5">{{button_name}}</button>
+                            <button type="reset" class="btn btn-warning col-5">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+
+        let date = $('#id_date');
+        date.datetimepicker({
+            format: 'Y-m-d H:i',
+        });
+
+
+    });
+</script>
+{% endblock javascript %}
