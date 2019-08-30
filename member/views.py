@@ -44,6 +44,8 @@ class MemberListView(LoginRequiredMixin, ListView):
 
     model = Member
 
+    paginate_by = 10
+
 
 @login_required
 def member_delete_view(request, pk):

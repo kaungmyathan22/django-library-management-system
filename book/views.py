@@ -43,6 +43,8 @@ class BooksListView(LoginRequiredMixin, ListView):
 
     model = Book
 
+    paginate_by = 10
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['update_form'] = BookCreationAddForm
@@ -103,7 +105,9 @@ def book_delete_view(request, pk):
 class CategoryListView(LoginRequiredMixin, ListView):
 
     model = Category
-
+    
+    paginate_by = 10
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["category_update_form"] = CategoryUpdateForm
@@ -165,6 +169,8 @@ def category_delete_view(request, pk):
 class ShelfListView(LoginRequiredMixin, ListView):
 
     model = Shelf
+
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -228,6 +234,8 @@ def shelf_delete_view(request, pk):
 class AuthorListView(LoginRequiredMixin, ListView):
 
     model = Author
+
+    paginate_by = 10
 
 
 class AuthorCreateView(LoginRequiredMixin, CreateView):
