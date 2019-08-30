@@ -25,7 +25,7 @@ Category List
             {% for category in object_list %}
             <tr data-id="{{ category.pk }}">
                 <td>
-                    {{ forloop.counter }}
+                    {{ category.pk }}
                 </td>
                 <td>
                     <a href="">
@@ -57,6 +57,9 @@ Category List
             {% endfor %}
         </tbody>
     </table>
+    {% if is_paginated %}
+        {% include 'snippets/pagination.html' with page_obj=page_obj %}
+    {% endif %}
 </div>
 <div class="modal" id="updateObjectModal">
     <div class="modal-dialog" role="document">

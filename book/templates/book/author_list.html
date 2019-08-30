@@ -25,7 +25,7 @@ Authors List
             {% for author in object_list %}
             <tr data-id={{ author.pk }}>
                 <td>
-                    {{ forloop.counter }}
+                    {{ author.pk }}
                 </td>
                 <td>
                     <a href="">
@@ -66,6 +66,12 @@ Authors List
             {% endfor %}
         </tbody>
     </table>
+    {% if is_paginated %}
+    
+    {% include 'snippets/pagination.html' with page_obj=page_obj %}
+    
+    {% endif %}
+
 </div>
 <div class="modal" id="deleteConfirmModal">
     <div class="modal-dialog" role="document">

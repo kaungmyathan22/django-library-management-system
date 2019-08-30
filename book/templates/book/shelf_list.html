@@ -26,7 +26,7 @@ Shelfs List
             {% for shelf in object_list %}
             <tr data-id={{ shelf.pk }}>
                 <td>
-                    {{ forloop.counter }}
+                    {{ shelf.pk }}
                 </td>
                 <td>
                     <a href="">
@@ -65,6 +65,9 @@ Shelfs List
             {% endfor %}
         </tbody>
     </table>
+    {% if is_paginated %}
+        {% include 'snippets/pagination.html' with page_obj=page_obj %}
+    {% endif %}
 </div>
 <div class="modal" id="myModal">
     <div class="modal-dialog" role="document">
@@ -115,7 +118,6 @@ Shelfs List
 
 
 {% block javascript %}
-{% if shelf_jquery_update %}
 <script>
 
     let update_buttons = $('button').filter('[id^=js-update]');
@@ -247,6 +249,5 @@ Shelfs List
     });
 
 </script>
-{% endif %}
 
 {% endblock javascript %}
