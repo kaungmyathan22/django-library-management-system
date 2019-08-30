@@ -33,6 +33,7 @@ class Member(models.Model):
     class Meta:
         """Meta definition for Member."""
 
+        ordering = ('pk',)
         verbose_name = 'Member'
         verbose_name_plural = 'Members'
 

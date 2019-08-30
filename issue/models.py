@@ -12,6 +12,10 @@ class Issue(models.Model):
 
     return_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+
+        ordering = ('pk',)
+
     def __str__(self):
         return f'{self.member} borrow {self.book}'
     
