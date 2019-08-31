@@ -2,6 +2,8 @@ import json
 from django.http import JsonResponse
 from django.urls import reverse_lazy, reverse
 from .models import Book, Author, Category, Shelf
+from member.models import Member
+from issue.models import Issue
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -34,7 +36,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         ctx_data['book_count'] = Book.objects.count()
         ctx_data['author_count'] = Author.objects.count()
         ctx_data['category_count'] = Category.objects.count()
-        ctx_data['category_count'] = Category.objects.count()
+        ctx_data['member_count'] = Member.objects.count()
+        ctx_data['issue_count'] = Issue.objects.filter(return_date=None).count()
+        ctx_data['return_issue_count'] = Issue.objects.exclude(return_date=None).count()
 
         return ctx_data
 
