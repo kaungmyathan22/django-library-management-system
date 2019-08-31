@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'book',
-    'student',
+    'accounts',
+    'member',
+    'issue',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +124,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = 'login'
+
+DATETIME_FORMAT = "%d/%m/%Y %H:%M'"
