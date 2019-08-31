@@ -1,95 +1,128 @@
 {% url 'book:dashboard' as dashboard_url_path %}
 {% url 'book:book-list' as book_list_url_path %}
+{% url 'book:book-create' as book_create_url_path %}
+{% url 'book:category-list' as category_list_url_path %}
+{% url 'book:category-create' as category_create_url_path %}
+{% url 'book:shelf-list' as shelf_list_url_path %}
+{% url 'book:shelf-create' as shelf_create_url_path %}
+{% url 'book:author-list' as author_list_url_path %}
+{% url 'book:author-create' as author_create_url_path %}
+{% url 'member:member-create' as member_create_url_path %}
+{% url 'member:member-list' as member_list_url_path %}
+{% url 'issue:issue-list' as issue_list_url_path %}
+{% url 'issue:issue-create' as issue_create_url_path %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-5">
     <div class="container">
-    <a class="navbar-brand" href="{{ dashboard_url_path }}">
-        <span class=""><i class="fas fa-book-open mr-4"></i>Library Management System</span>
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarColor01">
-        <ul class="navbar-nav ml-auto h5">
-            <li class="nav-item mr-2 
-                {% if 'dashboard' in request.path %}
-                    active
-                {% endif %}
-                    ">
-                <a class="nav-link" href="{{ dashboard_url_path }}">Dashboard <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item mr-2 dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="https://bootswatch.com/materia/#" role="button" aria-haspopup="true" aria-expanded="false">Category</a>
-                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Add Author</a>
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Manage Author</a>
-                </div>
-            </li>
+        <a class="navbar-brand" href="{{ dashboard_url_path }}">
+            <span class=""><i class="fas fa-book-open mr-4"></i>Library Management System</span>
+        </a>
+        
+        {% if request.user.is_authenticated %}
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item mr-2 
+                    {% if 'dashboard' in request.path %}
+                        active
+                    {% endif %}
+                        ">
+                        <a class="nav-link" href="{{ dashboard_url_path }}">Dashboard <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item mr-2 dropdown 
+                    {% if 'category' in request.path %}
+                         active
+                    {% endif %}
+                        ">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Category</a>
+                        <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                            <a class="dropdown-item {% if request.path == category_create_url_path %}text-primary{% endif %}" href="{{ category_create_url_path }}">Add Category</a>
+                            <a class="dropdown-item {% if request.path == category_list_url_path %}text-primary{% endif %}" href="{{ category_list_url_path }}">Manage Category</a>
+                        </div>
+                    </li>
 
-            <li class="nav-item mr-2 dropdown 
-                {% if 'book' in request.path %}
-                    active
-                {% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Book</a>
-                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Add Book</a>
-                    <a class="dropdown-item" href="{{ book_list_url_path }}">Manage Books</a>
-                </div>
-            </li>
+                    <li class="nav-item mr-2 dropdown 
+                    {% if 'book' in request.path %}
+                        active
+                    {% endif %}">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Book</a>
+                        <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                            <a class="dropdown-item  {% if request.path == book_create_url_path %}text-primary{% endif %}" href="{{ book_create_url_path }}">Add Book</a>
+                            <a class="dropdown-item {% if request.path == book_list_url_path %}text-primary{% endif %}" href="{{ book_list_url_path }}">Manage Books</a>
+                        </div>
+                    </li>
 
-            <li class="nav-item mr-2 dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="https://bootswatch.com/materia/#" role="button" aria-haspopup="true" aria-expanded="false">Book Shelf</a>
-                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Add Author</a>
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Manage Author</a>
-                </div>
-            </li>
+                    <li class="nav-item mr-2 dropdown 
+                    {% if 'shelf' in request.path %}
+                        active
+                    {% endif %}">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Book Shelf</a>
+                        <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                            <a class="dropdown-item  {% if request.path == shelf_create_url_path %}text-primary{% endif %}" href="{{ shelf_create_url_path }}">Add Shelf</a>
+                            <a class="dropdown-item {% if request.path == shelf_list_url_path %}text-primary{% endif %}" href="{{ shelf_list_url_path }}">Manage Shelfs</a>
+                        </div>
+                    </li>
 
-            <li class="nav-item mr-2 dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="https://bootswatch.com/materia/#" role="button" aria-haspopup="true" aria-expanded="false">Issue</a>
-                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Add Author</a>
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Manage Author</a>
-                </div>
-            </li>
+                    <li class="nav-item mr-2 dropdown 
+                    {% if 'shelf' in request.path %}
+                        active
+                    {% endif %}">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Issue</a>
+                        <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                            <a class="dropdown-item {% if request.path == issue_create_url_path %}text-primary{% endif %}" href="{{ issue_create_url_path }}">Add Issue</a>
+                            <a class="dropdown-item {% if request.path == issue_list_url_path %}text-primary{% endif %}" href="{{ issue_list_url_path }}">Manage Issues</a>
+                        </div>
+                    </li>
 
-            <li class="nav-item mr-2 dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="https://bootswatch.com/materia/#" role="button" aria-haspopup="true" aria-expanded="false">Member</a>
-                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Add Member</a>
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Manage Member</a>
-                </div>
-            </li>
-            <li class="nav-item mr-2 dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="https://bootswatch.com/materia/#" role="button" aria-haspopup="true" aria-expanded="false">Author</a>
-                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Add Author</a>
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Manage Author</a>
-                </div>
-            </li>
-            <li class="nav-item mr-2 dropdown">
+                    <li class="nav-item mr-2 dropdown 
+                                        {% if 'member' in request.path %}
+                                            active
+                                        {% endif %}">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Member</a>
+                        <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                            <a class="dropdown-item {% if request.path == member_create_url_path %}text-primary{% endif %}" href="{{ member_create_url_path }}">Add Member</a>
+                            <a class="dropdown-item {% if request.path == member_list_url_path %}text-primary{% endif %}" href="{{ member_list_url_path }}">Manage Member</a>
+                        </div>
+                    </li>
+                    <li class="nav-item mr-2 dropdown 
+                    {% if 'author' in request.path %}
+                        active
+                    {% endif %}">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Author</a>
+                        <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                            <a class="dropdown-item {% if request.path == author_create_url_path %}text-primary{% endif %}" href="{{ author_create_url_path }}">Add Author</a>
+                            <a class="dropdown-item {% if request.path == author_list_url_path %}text-primary{% endif %}" href="{{ author_list_url_path }}">Manage Authors</a>
+                        </div>
+                    </li>
+                    <li class="nav-item mr-2 dropdown">
 
-                {% if not request.user.authenticated %}
+                        {% if not request.user.authenticated %}
 
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="https://bootswatch.com/materia/#" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
-                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Profile</a>
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Reset Password</a>
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Change Password</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="https://bootswatch.com/materia/#">Logout</a>
-                </div>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
+                        <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                            <a class="dropdown-item" href="#">Welcome {{ request.user }}</a>
+                            {% if  request.user.is_superuser %}
+                            <a class="dropdown-item" href="{% url 'register' %}">Create Account</a>
+                            {% endif %}
 
-                {% else %}
-                <a class="nav-link" href="https://bootswatch.com/materia/#">Login</a>
-                {% endif %}
+                            <a class="dropdown-item" href="{% url 'password_reset' %}">Reset Password</a>
+                            <a class="dropdown-item" href="{% url 'password_change' %}">Change Password</>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                        </div>
 
-            </li>
-        </ul>
-        <!-- <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search">
-            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-        </form> -->
-    </div>
+                        {% else %}
+                        <a class="nav-link" href="https://bootswatch.com/materia/#">Login</a>
+                        {% endif %}
+
+                    </li>
+                </ul>
+            </div>
+
+        {% endif %}
+
     </div>
 </nav>
