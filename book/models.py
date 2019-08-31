@@ -67,7 +67,7 @@ class Book(CreatedUpdatedMixin):
     author = models.ManyToManyField(to="Author", related_name='books')
 
     category = models.ForeignKey(
-        "Category", on_delete=models.DO_NOTHING, related_name='books')
+        "Category", on_delete=models.SET_NULL, null=True, blank=True, related_name='books')
 
     amount = models.PositiveIntegerField()
 
@@ -84,7 +84,7 @@ class Book(CreatedUpdatedMixin):
         upload_to=image_upload_path, null=True, blank=True)
 
     shelf = models.ForeignKey(
-        to="Shelf", on_delete=models.SET_NULL, null=True, related_name='books')
+        to="Shelf", on_delete=models.SET_NULL, null=True, blank=True, related_name='books')
 
     class Meta:
         """Meta definition for Book."""
