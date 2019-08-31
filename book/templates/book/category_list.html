@@ -9,7 +9,34 @@ Category List
 
 {% block content %}
 
-<div class='container my-5'  id="js-category-list-body">
+<div class='container my-5' id="js-category-list-body">
+    <div class="row my-5">
+        <div class="col-6">
+            <h1>Category List</h1>
+
+            {% if request.GET.q %}
+            search result for <strong>{{ request.GET.q }}</strong> <small> (( {{object_list.count}} )) </small>
+            {% endif %}
+
+        </div>
+        <form class="col-6">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search...." name="q" {% if request.GET.q %} value="{{ request.GET.q }}" {% endif %}>
+                        <div class="input-group-append">
+                            <button type="submit" class="input-group-text">
+                                <i class="fas fa-search fa-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if object_list %}
+
     <table class="table">
         <thead>
             <tr class="table">
@@ -58,7 +85,21 @@ Category List
         </tbody>
     </table>
     {% if is_paginated %}
-        {% include 'snippets/pagination.html' with page_obj=page_obj %}
+    {% include 'snippets/pagination.html' with page_obj=page_obj %}
+    {% endif %}
+    {% else %}
+
+
+    {% if request.GET.q %}
+
+    <div class="row">
+        <div class="col-12 text-center text-muted h2">
+            Not found search result for <strong>{{ request.GET.q}}</strong>
+        </div>
+    </div>
+
+    {% endif %}
+
     {% endif %}
 </div>
 <div class="modal" id="updateObjectModal">
