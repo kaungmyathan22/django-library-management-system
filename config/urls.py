@@ -22,6 +22,9 @@ admin.site.index_title = "Welcome to Library Management System admin Portal"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
+    path('member/', include('member.urls', namespace='member')),
+    path('issue/', include('issue.urls', namespace='issue')),
     path('', include('book.urls', namespace='book')),
 ]
 
