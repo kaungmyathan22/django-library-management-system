@@ -13,11 +13,11 @@ Issued Book List
     <div class="row my-5">
         <div class="col-6">
             <h1>Issue List</h1>
-    
+
             {% if request.GET.q %}
             search result for <strong>{{ request.GET.q }}</strong> <small> (( {{object_list.count}} )) </small>
             {% endif %}
-    
+
         </div>
         <form class="col-6">
             <div class="form-group">
@@ -34,7 +34,7 @@ Issued Book List
             </div>
         </form>
     </div>
-    
+
     {% if object_list %}
 
     <table class="table">
@@ -71,12 +71,12 @@ Issued Book List
                         <i class="fas fa-trash-alt"></i>
                     </button>
                     &nbsp;
-                    
+
                     <button class="btn btn-info mr-2" data-toggle="modal" data-target="#myModal" id="js-update" data-id={{ issued_book.pk }} data-action="{% url 'issue:issue-update' pk=issued_book.pk %}" data-placement="bottom" data-toggle="tooltip" title="Edit book" data-original-title="Edit book">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
 
-                    <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" id='js-return-issue-book' data-id='{{ issued_book.pk }}' title="Recieve Return book" data-action="{% url 'issue:issue-return' pk=issued_book.pk %}" data-original-title="Recieve Return book">
+                    <button type="button" class="btn btn-success {% if issued_book.return_date %}disabled{% endif %}" data-toggle="tooltip" data-placement="bottom" id='js-return-issue-book' data-id='{{ issued_book.pk }}' title="Recieve Return book" data-action="{% url 'issue:issue-return' pk=issued_book.pk %}" data-original-title="Recieve Return book">
                         <i class="fas fa-share"></i>
                     </button>
 
@@ -86,22 +86,22 @@ Issued Book List
         </tbody>
     </table>
     {% if is_paginated %}
-        {% include 'snippets/pagination.html' with page_obj=page_obj %}
+    {% include 'snippets/pagination.html' with page_obj=page_obj %}
     {% endif %}
 
     {% else %}
-    
-    
+
+
     {% if request.GET.q %}
-    
+
     <div class="row">
         <div class="col-12 text-center text-muted h2">
             Not found search result for <strong>{{ request.GET.q}}</strong>
         </div>
     </div>
-    
+
     {% endif %}
-    
+
     {% endif %}
 
 </div>
@@ -155,28 +155,32 @@ Issued Book List
 <script>
 
     $('#id_date').datetimepicker({
-            format: 'Y-m-d H:i',
-        });
+        format: 'Y-m-d H:i',
+    });
 
     let update_buttons = $('button').filter('[id^=js-update]');
 
     let delete_buttons = $('button').filter('[id^=js-delete]');
-    
+
     let return_book_buttons = $('button').filter('[id^=js-return-issue-book]');
 
     let trs = $('tbody').children('tr');
 
-    return_book_buttons.click(function(){
-        
-        let pk = $(this).data('id');
+    return_book_buttons.click(function () {
 
-        let row_to_update = trs.filter(`[data-id^=${pk}]`)
+        let is_disabled = $(this).attr('class').split(' ')[2]
 
-        let url = $(this).data('action')
+        if (typeof is_disabled === "undefined") {
 
-        let return_date_col = $($(row_to_update).children()[4])
+            let pk = $(this).data('id');
 
-        $.ajax({
+            let row_to_update = trs.filter(`[data-id^=${pk}]`)
+
+            let url = $(this).data('action')
+
+            let return_date_col = $($(row_to_update).children()[4])
+
+            $.ajax({
                 method: "GET",
                 url: url,
                 data: {},
@@ -210,6 +214,7 @@ Issued Book List
                     console.log(errorThrown)
                 }
             });
+        }
     });
 
     delete_buttons.click(function () {
@@ -277,7 +282,7 @@ Issued Book List
         let member_name_col = $(cleanded_cols[1]);
 
         let book_name_col = $(cleanded_cols[2]);
-        
+
         let issued_date_col = $(cleanded_cols[3]);
 
         $(form).on('submit', function (event) {
@@ -292,7 +297,7 @@ Issued Book List
                     let book_name = data.book;
                     let member_name = data.member;
                     let issued_date = data.date;
-                    
+
                     member_name_col.html(member_name);
                     book_name_col.html(book_name);
                     issued_date_col.html(issued_date);
@@ -320,7 +325,7 @@ Issued Book List
                     console.log(errorThrown)
                 }
             });
-            
+
             $("#myModal").modal('hide');
         });
 
