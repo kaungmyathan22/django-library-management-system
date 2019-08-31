@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404
+import json
+from django.http import JsonResponse
 from django.urls import reverse_lazy, reverse
 from .models import Book, Author, Category, Shelf
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-import json
-
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
 from django.views.generic import (
     TemplateView,
     ListView,
@@ -44,6 +44,19 @@ class BooksListView(LoginRequiredMixin, ListView):
     model = Book
 
     paginate_by = 10
+
+    def get_queryset(self):
+
+        q = self.request.GET.get('q', None)
+
+        if not q is None:
+
+            conditions = Q(name__icontains=q) | Q(category__name__icontains=q) | Q(
+                name__icontains=q) | Q(shelf__name__icontains=q) | Q(description__icontains=q)
+
+            return self.model.objects.filter(conditions)
+
+        return super().get_queryset()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -102,12 +115,25 @@ def book_delete_view(request, pk):
             'message': f'Successfully deleted {book_name}.'
         })
 
+
 class CategoryListView(LoginRequiredMixin, ListView):
 
     model = Category
-    
+
     paginate_by = 10
-    
+
+    def get_queryset(self):
+
+        q = self.request.GET.get('q', None)
+
+        if not q is None:
+
+            conditions = Q(name__icontains=q)
+            
+            return self.model.objects.filter(conditions)
+
+        return super().get_queryset()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["category_update_form"] = CategoryUpdateForm
@@ -172,10 +198,26 @@ class ShelfListView(LoginRequiredMixin, ListView):
 
     paginate_by = 10
 
+    def get_queryset(self):
+
+        q = self.request.GET.get('q', None)
+
+        if not q is None:
+
+            conditions = Q(name__icontains=q)
+
+            return self.model.objects.filter(conditions)
+
+        return super().get_queryset()
+
     def get_context_data(self, **kwargs):
+
         context = super().get_context_data(**kwargs)
+
         context["shelf_jquery_update"] = json.dumps(True)
+
         context["shelf_update_form"] = ShelfUpdateForm
+
         return context
 
 
@@ -236,6 +278,19 @@ class AuthorListView(LoginRequiredMixin, ListView):
     model = Author
 
     paginate_by = 10
+
+    def get_queryset(self):
+
+        q = self.request.GET.get('q', None)
+
+        if not q is None:
+
+            conditions = Q(first_name__icontains=q) | Q(
+                last_name__icontains=q)
+
+            return self.model.objects.filter(conditions)
+
+        return super().get_queryset()
 
 
 class AuthorCreateView(LoginRequiredMixin, CreateView):

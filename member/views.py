@@ -1,11 +1,12 @@
-from django.shortcuts import get_object_or_404
-from django.views.generic import CreateView, ListView, UpdateView
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy, reverse
 from .models import Member
+from django.db.models import Q
+from django.http import JsonResponse
 from .forms import MemberCreationForm
+from django.urls import reverse_lazy, reverse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, ListView, UpdateView
 
 
 class MemberCreateView(LoginRequiredMixin, CreateView):
@@ -45,6 +46,22 @@ class MemberListView(LoginRequiredMixin, ListView):
     model = Member
 
     paginate_by = 10
+
+    def get_queryset(self):
+            
+        q = self.request.GET.get('q', None)
+
+        if not q is None:
+
+            conditions = Q(first_name__icontains=q) | Q(
+                last_name__icontains=q) | Q(email__icontains=q) | Q(roll_no__icontains=q)
+            
+            return self.model.objects.filter(conditions).distinct()
+
+        return super().get_queryset()
+
+
+
 
 
 @login_required
