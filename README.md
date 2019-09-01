@@ -1,7 +1,7 @@
 # Non-Fiction Summaries
-**A simple shopping cart implemented in Django.**
+**A Library Management System implemented in Django.**
 
-It is a **fictional** Ecommerce site built with Python's *Django* framework - no template was used.
+It is a Simple Library Management System site built with Python's *Django* framework - no template was used.
 
 ![coverage-image] [![Python Version][python-image]][python-url] [![Django Version](https://img.shields.io/badge/django-2.2-green.svg)](https://shields.io/) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
@@ -12,7 +12,9 @@ It is a **fictional** Ecommerce site built with Python's *Django* framework - no
 3. HTML
 4. CSS
 5. Bootstrap
-6. SQLite database
+6. JQuery
+7. Ajax
+8. SQLite database
 
 ## Checkout this repo, install dependencies, then start the server:
 
@@ -20,8 +22,8 @@ It is a **fictional** Ecommerce site built with Python's *Django* framework - no
     > cd shopping-cart
     > virtualenv .
     > source bin/activate
-    > cd src
     > pip install -r requirements.txt
+    > python manage.py createsuperuser
     > python manage.py runserver
 
 ## Running the tests
@@ -42,7 +44,7 @@ Distributed under the XYZ license. See ``LICENSE`` for more information.
 
 ## Contributing
 
-1. Fork it (<https://github.com/arkarhtethan/shopping-cart/fork>)
+1. Fork it (<https://github.com/arkarhtethan/django-library-management-system/fork>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
