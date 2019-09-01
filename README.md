@@ -18,7 +18,7 @@ It is a Simple Library Management System site built with Python's *Django* frame
 
 ## Checkout this repo, install dependencies, then start the server:
 
-    > git clone https://github.com/arkarhtethan/shopping-cart.git
+    > git clone https://github.com/arkarhtethan/django-library-management-system.git
     > cd shopping-cart
     > virtualenv .
     > source bin/activate
