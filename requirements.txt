@@ -1,6 +1,6 @@
 backcall==0.1.0
 cairocffi==1.0.2
-CairoSVG==2.4.0
+CairoSVG==2.5.1
 cffi==1.12.3
 coverage==4.5.3
 coverage-badge==1.0.1
